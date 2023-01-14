@@ -10,7 +10,7 @@ servers:
 paths:
   /api/v1/files:
     post:
-      summary: Загрузить и зарегестрировать файл
+      summary: Загрузить и зарегистрировать файл
       tags:
         - files
       operationId: uploadAndRegisterFile
@@ -18,7 +18,7 @@ paths:
         $ref: '#/components/requestBodies/UploadedFile'
       responses:
         '201':
-          description: Файле загружен и зарегистрирован
+          description: Файл загружен и зарегистрирован
           content:
             application/json:
               schema:
@@ -54,7 +54,7 @@ paths:
           $ref: '#/components/responses/500ServerError'
     
     put:
-      summary: Измененить информацию о файле
+      summary: Изменить информацию о файле
       tags:
         - files
       operationId: updateFileInfo
@@ -176,7 +176,7 @@ components:
     FileInfoId:
       name: fileId
       in: query
-      description: Иденитфикатор файла
+      description: Идентификатор файла
       required: true
       schema:
         type: string
