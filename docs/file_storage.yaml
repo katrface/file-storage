@@ -1,0 +1,183 @@
+openapi: '3.0.2'
+info:
+  title: file-storage
+  version: '1.0.0'
+  license:
+    name: MIT
+servers:
+  - url: http:/127.0.0.1:3000
+    description: Локальный сервер
+paths:
+  /api/v1/files:
+    post:
+      summary: Загрузить и зарегистрировать файл
+      tags:
+        - files
+      operationId: uploadAndRegisterFile
+      requestBody:
+        $ref: '#/components/requestBodies/UploadedFile'
+      responses:
+        '201':
+          description: Файл загружен и зарегистрирован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileInfo'
+
+        '404':
+          $ref: '#/components/responses/404NotFound'
+
+        '500':
+          $ref: '#/components/responses/500ServerError'
+
+
+  /api/v1/files/{fileId}:
+    get:
+      summary: Получить информацию о файле
+      tags:
+        - files
+      operationId: getFileInfo
+      parameters:
+        - $ref: '#/components/parameters/FileInfoId'
+      responses:
+        '200':
+          description: Информация о файле получена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileInfo'
+
+        '404':
+          $ref: '#/components/responses/404NotFound'
+
+        '500':
+          $ref: '#/components/responses/500ServerError'
+    
+    put:
+      summary: Изменить информацию о файле
+      tags:
+        - files
+      operationId: updateFileInfo
+      parameters:
+        - $ref: '#/components/parameters/FileInfoId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/FileInfo'
+      responses:
+        '200':
+          description: Информация о файле изменена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileInfo'
+
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        
+        '500':
+          $ref: '#/components/responses/500ServerError'
+
+    delete:
+      summary: Удалить файл
+      tags:
+        - files
+      operationId: deleteFile
+      parameters:
+        - $ref: '#/components/parameters/FileInfoId'
+      responses:
+        '200':
+          description: Файл удален
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileInfo'
+
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        
+        '500':
+          $ref: '#/components/responses/500ServerError'
+
+
+components:
+  schemas:
+    UploadAndRegisterFile:
+      writeOnly: true
+      type: object
+      required:
+        - file
+      properties:
+        file:
+          format: binary
+          type: string
+        payload:
+          $ref: '#/components/schemas/FilePayload'
+
+    FileInfo:
+      type: object
+      required:
+        - id
+        - url
+      properties:
+        id:
+          type: string
+          example: f315a70e-513c-4e9b-9435-d089803740f6
+          readOnly: true
+        url:
+          type: string
+          example: https://storage/images/f315a70e-513c-4e9b-9435-d089803740f6
+          readOnly: true
+        payload:
+          $ref: '#/components/schemas/FilePayload'
+    
+    FilePayload:
+      type: object
+      default: {}
+      example: { "index": 0 }
+    
+    ApiError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+      
+
+
+  requestBodies:
+    UploadedFile:
+      content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadAndRegisterFile'
+
+  responses:
+    404NotFound:
+      description: Not found
+      content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    
+    500ServerError:
+      description: Server error
+      content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  parameters:
+    FileInfoId:
+      name: fileId
+      in: query
+      description: Идентификатор файла
+      required: true
+      schema:
+        type: string
+        example: aefec2c3-4608-4605-986c-828cb8cb6696
