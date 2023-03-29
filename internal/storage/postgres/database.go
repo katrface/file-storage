@@ -1,4 +1,4 @@
-package storage
+package postgres
 
 import (
 	"file-storage/internal/domain/file_info"
@@ -16,9 +16,9 @@ type DBInstance struct {
 
 var Database DBInstance
 
-func ConnectDb() {
-	dsn := "host=localhost user=postgres password=password dbname=file_storage port=5432 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+func ConnectDb(postgresUrl string) {
+	// dsn := "host=postgres user=postgres password=password dbname=file_storage port=5432 sslmode=disable"
+	db, err := gorm.Open(postgres.Open(postgresUrl), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal("Failed to connect to the databese. \n", err.Error())

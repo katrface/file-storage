@@ -1,4 +1,4 @@
-package storage
+package postgres
 
 import (
 	"file-storage/internal/domain/file_info"
