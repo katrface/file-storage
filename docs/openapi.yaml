@@ -8,7 +8,7 @@ servers:
   - url: http:/127.0.0.1:3000
     description: Локальный сервер
 paths:
-  /api/v1/files:
+  /api/v1/files/upload-one:
     post:
       summary: Загрузить и зарегистрировать файл
       tags:
@@ -30,12 +30,36 @@ paths:
         '500':
           $ref: '#/components/responses/500ServerError'
 
+  /api/v1/file-infos:
+    post:
+      summary: Зарегистрировать файл
+      tags:
+        - file-infos
+      operationId: registerFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFileInfo'
+      responses:
+        '201':
+          description: Файл зарегистрирован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileInfo'
 
-  /api/v1/files/{fileId}:
+        '404':
+          $ref: '#/components/responses/404NotFound'
+
+        '500':
+          $ref: '#/components/responses/500ServerError'
+
+  /api/v1/file-infos/{fileId}:
     get:
       summary: Получить информацию о файле
       tags:
-        - files
+        - file-infos
       operationId: getFileInfo
       parameters:
         - $ref: '#/components/parameters/FileInfoId'
@@ -56,7 +80,7 @@ paths:
     put:
       summary: Изменить информацию о файле
       tags:
-        - files
+        - file-infos
       operationId: updateFileInfo
       parameters:
         - $ref: '#/components/parameters/FileInfoId'
@@ -80,9 +104,9 @@ paths:
           $ref: '#/components/responses/500ServerError'
 
     delete:
-      summary: Удалить файл
+      summary: Удалить информацию о файле
       tags:
-        - files
+        - file-infos
       operationId: deleteFile
       parameters:
         - $ref: '#/components/parameters/FileInfoId'
@@ -112,14 +136,26 @@ components:
         file:
           format: binary
           type: string
-        payload:
-          $ref: '#/components/schemas/FilePayload'
+        # payload:
+        #   $ref: '#/components/schemas/FilePayload'
+
+    CreateFileInfo:
+      type: object
+      required:
+        - url
+      properties:
+        url:
+          type: string
+          example: https://storage/images/f315a70e-513c-4e9b-9435-d089803740f6
 
     FileInfo:
       type: object
       required:
         - id
         - url
+        - created_at
+        - updated_at
+        - deleted_at
       properties:
         id:
           type: string
@@ -129,13 +165,27 @@ components:
           type: string
           example: https://storage/images/f315a70e-513c-4e9b-9435-d089803740f6
           readOnly: true
-        payload:
-          $ref: '#/components/schemas/FilePayload'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+        # payload:
+        #   $ref: '#/components/schemas/FilePayload'
     
-    FilePayload:
-      type: object
-      default: {}
-      example: { "index": 0 }
+    # FilePayload:
+    #   type: object
+    #   default: {}
+    #   example: { "index": 0 }
     
     ApiError:
       type: object
