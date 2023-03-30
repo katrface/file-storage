@@ -49,3 +49,15 @@ down: ### Down docker container
 run: ### Local start
 	go run cmd/file_storage_server/main.go
 .PHONY: run
+
+linter-golangci: ### check by golangci linter
+	golangci-lint run
+.PHONY: linter-golangci
+
+linter-hadolint: ### check by hadolint linter
+	git ls-files --exclude='Dockerfile*' -c --ignored | xargs hadolint
+.PHONY: linter-hadolint
+
+linter-dotenv: ### check by dotenv linter
+	dotenv-linter
+.PHONY: linter-dotenv
