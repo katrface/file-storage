@@ -5,7 +5,11 @@ import (
 	httpV1 "file-storage/internal/controller/http/v1"
 	"file-storage/internal/domain/file_info"
 	"file-storage/internal/storage/postgres"
-	"fmt"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -22,6 +26,7 @@ func New() *FileStorageApp {
 
 func (app *FileStorageApp) Run(cfg *config.Config) error {
 	postgres.ConnectDb(cfg.PG.URL)
+	defer postgres.CloseDb()
 
 	fileInfoRepo := postgres.New(postgres.Database.Db)
 
@@ -29,9 +34,27 @@ func (app *FileStorageApp) Run(cfg *config.Config) error {
 
 	httpV1.NewRouter(app.httpServer, *fileInfoService)
 
-	fmt.Println("server running")
+	log.Println("Server running...")
 
-	app.httpServer.Listen(":" + cfg.HTTP.Port)
+	// Listen from a different goroutine
+	go func() {
+		if err := app.httpServer.Listen(":" + cfg.HTTP.Port); err != nil {
+			log.Panic(err)
+		}
+	}()
+
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
+
+	_ = <-interrupt // This blocks the main thread until an interrupt is received
+	log.Println("Gracefully shutting down...")
+
+	shutdownTimeout := time.Duration(cfg.App.ShutdownTimeout) * time.Second
+	_ = app.httpServer.ShutdownWithTimeout(shutdownTimeout)
+
+	log.Println("Running cleanup tasks...")
+
+	log.Println("Fiber was successful shutdown.")
 
 	return nil
 }

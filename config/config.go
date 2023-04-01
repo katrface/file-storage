@@ -17,8 +17,9 @@ type (
 
 	// App -.
 	App struct {
-		Name    string `env-required:"true" yaml:"name"    env:"APP_NAME"`
-		Version string `env-required:"true" yaml:"version" env:"APP_VERSION"`
+		Name            string `env-required:"true" yaml:"name"    env:"APP_NAME"`
+		Version         string `env-required:"true" yaml:"version" env:"APP_VERSION"`
+		ShutdownTimeout uint   `env-required:"true" yaml:"shutdown_timeout" env:"APP_SHUTDOWN_TIMEOUT"`
 	}
 
 	// HTTP -.

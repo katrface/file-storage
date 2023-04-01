@@ -33,3 +33,13 @@ func ConnectDb(postgresUrl string) {
 
 	Database = DBInstance{Db: db}
 }
+
+func CloseDb() {
+	sqlDB, err := Database.Db.DB()
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	sqlDB.Close()
+}

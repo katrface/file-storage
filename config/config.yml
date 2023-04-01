@@ -1,6 +1,7 @@
 app:
   name: 'file-storage'
   version: '1.0.0'
+  shutdown_timeout: 5
 
 http:
   port: '3000'
