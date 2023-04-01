@@ -11,6 +11,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/goccy/go-json"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -19,7 +21,10 @@ type FileStorageApp struct {
 }
 
 func New() *FileStorageApp {
-	fiberServer := fiber.New()
+	fiberServer := fiber.New(fiber.Config{
+		JSONEncoder: json.Marshal,
+		JSONDecoder: json.Unmarshal,
+	})
 
 	return &FileStorageApp{httpServer: fiberServer}
 }
