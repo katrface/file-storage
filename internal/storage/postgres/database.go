@@ -11,14 +11,13 @@ import (
 )
 
 type DBInstance struct {
-	Db *gorm.DB
+	DB *gorm.DB
 }
 
 var Database DBInstance
 
-func ConnectDb(postgresUrl string) {
-	// dsn := "host=postgres user=postgres password=password dbname=file_storage port=5432 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(postgresUrl), &gorm.Config{})
+func ConnectDB(postgresURL string) {
+	db, err := gorm.Open(postgres.Open(postgresURL), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal("Failed to connect to the databese. \n", err.Error())
@@ -31,11 +30,11 @@ func ConnectDb(postgresUrl string) {
 	log.Println("Running Migrations")
 	db.AutoMigrate(&file_info.FileInfo{})
 
-	Database = DBInstance{Db: db}
+	Database = DBInstance{DB: db}
 }
 
-func CloseDb() {
-	sqlDB, err := Database.Db.DB()
+func CloseDB() {
+	sqlDB, err := Database.DB.DB()
 
 	if err != nil {
 		log.Println(err)

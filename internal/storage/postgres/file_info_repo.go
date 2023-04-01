@@ -16,6 +16,7 @@ func New(db *gorm.DB) *FileInfoPostgresRepository {
 
 func (r *FileInfoPostgresRepository) Create(fileInfo file_info.FileInfo) (file_info.FileInfo, error) {
 	r.db.Create(&fileInfo)
+
 	return fileInfo, nil
 }
 
@@ -27,7 +28,7 @@ func (r *FileInfoPostgresRepository) FindAll() ([]file_info.FileInfo, error) {
 	return fileInfos, nil
 }
 
-func (r *FileInfoPostgresRepository) FindById(id uint) (file_info.FileInfo, error) {
+func (r *FileInfoPostgresRepository) FindByID(id uint) (file_info.FileInfo, error) {
 	fileInfo := file_info.FileInfo{}
 
 	r.db.Find(&fileInfo, "id = ?", id)
@@ -37,10 +38,12 @@ func (r *FileInfoPostgresRepository) FindById(id uint) (file_info.FileInfo, erro
 
 func (r *FileInfoPostgresRepository) Update(fileInfo file_info.FileInfo) (file_info.FileInfo, error) {
 	r.db.Save(&fileInfo)
+
 	return fileInfo, nil
 }
 
 func (r *FileInfoPostgresRepository) Delete(fileInfo file_info.FileInfo) (file_info.FileInfo, error) {
 	r.db.Delete(&fileInfo)
+
 	return fileInfo, nil
 }

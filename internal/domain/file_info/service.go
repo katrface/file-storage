@@ -4,10 +4,10 @@ import "time"
 
 type FileInfoRepository interface {
 	FindAll() ([]FileInfo, error)
-	FindById(id uint) (FileInfo, error)
-	Create(file_info FileInfo) (FileInfo, error)
-	Update(file_info FileInfo) (FileInfo, error)
-	Delete(file_info FileInfo) (FileInfo, error)
+	FindByID(id uint) (FileInfo, error)
+	Create(fileInfo FileInfo) (FileInfo, error)
+	Update(fileInfo FileInfo) (FileInfo, error)
+	Delete(fileInfo FileInfo) (FileInfo, error)
 }
 
 type FileInfoService struct {
@@ -20,6 +20,7 @@ func New(repo FileInfoRepository) *FileInfoService {
 
 func (s *FileInfoService) CreateFileInfo(fileInfo FileInfo) (FileInfo, error) {
 	createdFileInfo, _ := s.repo.Create(fileInfo)
+
 	return createdFileInfo, nil
 }
 
@@ -29,24 +30,26 @@ func (s *FileInfoService) GetFileInfos() ([]FileInfo, error) {
 	return fileInfos, nil
 }
 
-func (s *FileInfoService) GetFileInfoById(id uint) (FileInfo, error) {
-	fileInfo, _ := s.repo.FindById(id)
+func (s *FileInfoService) GetFileInfoByID(id uint) (FileInfo, error) {
+	fileInfo, _ := s.repo.FindByID(id)
 
 	return fileInfo, nil
 }
 
-func (s *FileInfoService) RemoveFileInfoById(id uint) (FileInfo, error) {
-	fileInfo, _ := s.GetFileInfoById(id)
+func (s *FileInfoService) RemoveFileInfoByID(id uint) (FileInfo, error) {
+	fileInfo, _ := s.GetFileInfoByID(id)
 	deletedAt := time.Now()
 	fileInfo.DeletedAt = &deletedAt
 	deletedFileInfo, _ := s.repo.Update(fileInfo)
+
 	return deletedFileInfo, nil
 }
 
-func (s *FileInfoService) DeleteFileInfoById(id uint) (FileInfo, error) {
-	fileInfo, _ := s.GetFileInfoById(id)
+func (s *FileInfoService) DeleteFileInfoByID(id uint) (FileInfo, error) {
+	fileInfo, _ := s.GetFileInfoByID(id)
 	deletedAt := time.Now()
 	fileInfo.DeletedAt = &deletedAt
 	deletedFileInfo, _ := s.repo.Delete(fileInfo)
+
 	return deletedFileInfo, nil
 }

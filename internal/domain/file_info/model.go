@@ -5,8 +5,8 @@ import (
 )
 
 type FileInfo struct {
-	Id  uint   `json:"id" gorm:"primaryKey"`
-	Url string `json:"url"`
+	ID  uint   `json:"id" gorm:"primaryKey"`
+	URL string `json:"url"`
 	// Payload   FilePayload `json:"payload,omitempty" gorm:"type:jsonb;default:'{}';not null"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`

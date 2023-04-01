@@ -30,10 +30,10 @@ func New() *FileStorageApp {
 }
 
 func (app *FileStorageApp) Run(cfg *config.Config) error {
-	postgres.ConnectDb(cfg.PG.URL)
-	defer postgres.CloseDb()
+	postgres.ConnectDB(cfg.PG.URL)
+	defer postgres.CloseDB()
 
-	fileInfoRepo := postgres.New(postgres.Database.Db)
+	fileInfoRepo := postgres.New(postgres.Database.DB)
 
 	fileInfoService := file_info.New(fileInfoRepo)
 
@@ -52,6 +52,7 @@ func (app *FileStorageApp) Run(cfg *config.Config) error {
 	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
 
 	_ = <-interrupt // This blocks the main thread until an interrupt is received
+
 	log.Println("Gracefully shutting down...")
 
 	shutdownTimeout := time.Duration(cfg.App.ShutdownTimeout) * time.Second

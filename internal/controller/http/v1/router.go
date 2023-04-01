@@ -8,9 +8,7 @@ import (
 )
 
 func NewRouter(httpServer *fiber.App, service file_info.FileInfoService) {
-
 	// K8s probe
-
 	probHandler := func(c *fiber.Ctx) error {
 		return c.SendStatus(http.StatusOK)
 	}

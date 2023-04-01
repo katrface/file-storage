@@ -16,8 +16,8 @@ func newFileInfoRoutes(router fiber.Router, service file_info.FileInfoService) {
 
 	router.Post("/file-infos", r.createFileInfo)
 	router.Get("/file-infos", r.getFileInfos)
-	router.Get("/file-infos/:id", r.getFileInfoById)
-	router.Delete("/file-infos/:id", r.removeFileInfoById)
+	router.Get("/file-infos/:id", r.getFileInfoByID)
+	router.Delete("/file-infos/:id", r.removeFileInfoByID)
 }
 
 func (r *fileInfoRoutes) createFileInfo(c *fiber.Ctx) error {
@@ -28,6 +28,7 @@ func (r *fileInfoRoutes) createFileInfo(c *fiber.Ctx) error {
 	}
 
 	createdFileInfo, _ := r.service.CreateFileInfo(fileInfo)
+
 	return c.Status(http.StatusCreated).JSON(createdFileInfo)
 }
 
@@ -37,18 +38,18 @@ func (r *fileInfoRoutes) getFileInfos(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(fileInfos)
 }
 
-func (r *fileInfoRoutes) getFileInfoById(c *fiber.Ctx) error {
+func (r *fileInfoRoutes) getFileInfoByID(c *fiber.Ctx) error {
 	id, _ := c.ParamsInt("id")
 
-	fileInfo, _ := r.service.GetFileInfoById(uint(id))
+	fileInfo, _ := r.service.GetFileInfoByID(uint(id))
 
 	return c.Status(http.StatusOK).JSON(fileInfo)
 }
 
-func (r *fileInfoRoutes) removeFileInfoById(c *fiber.Ctx) error {
+func (r *fileInfoRoutes) removeFileInfoByID(c *fiber.Ctx) error {
 	id, _ := c.ParamsInt("id")
 
-	fileInfo, _ := r.service.RemoveFileInfoById(uint(id))
+	fileInfo, _ := r.service.RemoveFileInfoByID(uint(id))
 
 	return c.Status(http.StatusOK).JSON(fileInfo)
 }
