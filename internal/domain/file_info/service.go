@@ -19,37 +19,62 @@ func New(repo FileInfoRepository) *FileInfoService {
 }
 
 func (s *FileInfoService) CreateFileInfo(fileInfo FileInfo) (FileInfo, error) {
-	createdFileInfo, _ := s.repo.Create(fileInfo)
+	createdFileInfo, err := s.repo.Create(fileInfo)
+	if err != nil {
+		return fileInfo, err
+	}
 
 	return createdFileInfo, nil
 }
 
 func (s *FileInfoService) GetFileInfos() ([]FileInfo, error) {
-	fileInfos, _ := s.repo.FindAll()
+	fileInfos, err := s.repo.FindAll()
+	if err != nil {
+		return fileInfos, err
+	}
 
 	return fileInfos, nil
 }
 
 func (s *FileInfoService) GetFileInfoByID(id uint) (FileInfo, error) {
-	fileInfo, _ := s.repo.FindByID(id)
+	fileInfo, err := s.repo.FindByID(id)
+	if err != nil {
+		return fileInfo, err
+	}
 
 	return fileInfo, nil
 }
 
 func (s *FileInfoService) RemoveFileInfoByID(id uint) (FileInfo, error) {
-	fileInfo, _ := s.GetFileInfoByID(id)
+	fileInfo, err := s.GetFileInfoByID(id)
+	if err != nil {
+		return fileInfo, err
+	}
+
 	deletedAt := time.Now()
 	fileInfo.DeletedAt = &deletedAt
-	deletedFileInfo, _ := s.repo.Update(fileInfo)
+
+	deletedFileInfo, err := s.repo.Update(fileInfo)
+	if err != nil {
+		return fileInfo, err
+	}
 
 	return deletedFileInfo, nil
 }
 
 func (s *FileInfoService) DeleteFileInfoByID(id uint) (FileInfo, error) {
-	fileInfo, _ := s.GetFileInfoByID(id)
+	fileInfo, err := s.GetFileInfoByID(id)
+	if err != nil {
+		return fileInfo, err
+	}
+
 	deletedAt := time.Now()
 	fileInfo.DeletedAt = &deletedAt
-	deletedFileInfo, _ := s.repo.Delete(fileInfo)
+
+	deletedFileInfo, err := s.repo.Delete(fileInfo)
+	if err != nil {
+		return fileInfo, err
+	}
 
 	return deletedFileInfo, nil
 }
